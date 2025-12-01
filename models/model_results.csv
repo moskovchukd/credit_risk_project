@@ -1,6 +1,6 @@
 Model,Accuracy
 LogisticRegression,0.752
-RandomForest,0.776
+RandomForest,0.772
 XGBoost,0.756
 SVM,0.748
 KNN,0.648

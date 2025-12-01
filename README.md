@@ -6,6 +6,7 @@ Instrukcja:
 2. Stwórz środowisko i zainstaluj zależności: `pip install -r requirements.txt`.
 3. Uruchom trening: `python run_train.py`.
 4. Wyniki modeli oraz wytrenowany model zostaną zapisane w folderze `models/`.
+45. LOl
 
 
 Pliki:
