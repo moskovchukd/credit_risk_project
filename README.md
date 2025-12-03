@@ -2,11 +2,12 @@
 
 
 Instrukcja:
-1. Umieść plik `german_credit_data.csv` w folderze `data/`.
-2. Stwórz środowisko i zainstaluj zależności: `pip install -r requirements.txt`.
-3. Uruchom trening: `python run_train.py`.
-4. Wyniki modeli oraz wytrenowany model zostaną zapisane w folderze `models/`.
-45. LOl
+1. Stwórz środowisko (venv) i zainstaluj zależności: `pip install -r requirements.txt`.
+2. Uruchom trening: `python run_train.py`.
+3. `python inspect_model_data.py`  
+4. `python3 example_usage.py`  
+5. Wyniki modeli oraz wytrenowany model zostaną zapisane w folderze `models/`.
+
 
 
 Pliki:
