@@ -4,7 +4,7 @@ Skrypt do inspekcji struktury danych i modelu
 
 import pandas as pd
 from src.preprocessing import prepare_data_from_ucimlrepo
-from predict import load_best_model
+from src.predict import load_best_model
 
 print("=" * 70)
 print("INSPEKCJA STRUKTURY DANYCH I MODELU")
@@ -67,7 +67,7 @@ print("=" * 70)
 
 # Utwórz szablon CSV z przykładowymi danymi
 template = X.iloc[0:3].copy()
-template.to_csv('template_new_customers.csv', index=False)
+template.to_csv('new_customers.csv', index=False)
 print("\n✓ Utworzono plik: template_new_customers.csv")
 print("  Użyj tego pliku jako szablonu dla nowych danych.")
 print("  Wypełnij go danymi nowych klientów zachowując nazwy i kolejność kolumn.")

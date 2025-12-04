@@ -71,8 +71,8 @@ if hasattr(predictor.model, 'predict_proba'):
     
     if n_classes == 2:
         # Model binarny (0 = dobre ryzyko, 1 = złe ryzyko)
-        print(f"  Dobre ryzyko (klasa 0): {probabilities[0][0]:.2%}")
-        print(f"  Złe ryzyko (klasa 1):   {probabilities[0][1]:.2%}")
+        print(f"  Niskie ryzyko (klasa 0): {probabilities[0][0]:.2%}")
+        print(f"  Wysokie ryzyko (klasa 1):   {probabilities[0][1]:.2%}")
     elif n_classes == 3:
         # Model 3-klasowy
         print(f"  Niskie ryzyko:  {probabilities[0][0]:.2%}")
