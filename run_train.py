@@ -1,5 +1,7 @@
 from src.preprocessing import prepare_data_from_ucimlrepo
 from src.model_training import train_and_compare
+from src.evaluation import save_all_visualizations
+import pandas as pd
 
 
 
@@ -7,11 +9,21 @@ from src.model_training import train_and_compare
 
 def main():
     X, y, preprocessor = prepare_data_from_ucimlrepo()
-    results = train_and_compare(X, y, preprocessor, output_dir='models')
 
-    print('Trening zakończony. Wyniki:')
+    # Pobierz dane źródłowe dla wizualizacji
+    df = pd.concat([X, y], axis=1)
+
+    # Trenuj modele
+    results, X_test_trans, y_test = train_and_compare(X, y, preprocessor, output_dir='models')
+
+    print('\nTrening zakończony. Wyniki:')
     for k,v in results.items():
-        print(k, v['accuracy'])
+        print(f'{k}: {v["accuracy"]:.4f}')
+
+    # Generuj wszystkie wizualizacje
+    print('\n' + '='*50)
+    save_all_visualizations(results, X_test_trans, y_test, df, output_dir='visualizations')
+    print('='*50)
 
 
 if __name__ == '__main__':

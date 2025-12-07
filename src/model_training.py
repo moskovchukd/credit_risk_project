@@ -81,4 +81,12 @@ def train_and_compare(X, y, preprocessor, output_dir='models', random_state=42):
 
     # zapis podsumowania jako pickle
     joblib.dump(results, os.path.join(output_dir, 'results_summary.pkl'))
-    return results
+
+    # zapis danych testowych dla wizualizacji
+    joblib.dump({
+        'X_test_trans': X_test_trans,
+        'y_test': y_test,
+        'preprocessor': preprocessor
+    }, os.path.join(output_dir, 'test_data.pkl'))
+
+    return results, X_test_trans, y_test
