@@ -11,7 +11,6 @@ import os
 
 
 def main():
-    # Sprawdź czy modele istnieją
     if not os.path.exists('models/results_summary.pkl'):
         print("Błąd: Nie znaleziono wytrenowanych modeli!")
         print("Najpierw uruchom: python run_train.py")
@@ -24,12 +23,10 @@ def main():
     X_test_trans = test_data['X_test_trans']
     y_test = test_data['y_test']
 
-    # Załaduj dane źródłowe
     print("Ładowanie danych źródłowych...")
     X, y, _ = prepare_data_from_ucimlrepo()
     df = pd.concat([X, y], axis=1)
 
-    # Generuj wizualizacje
     print('\n' + '='*50)
     save_all_visualizations(results, X_test_trans, y_test, df, output_dir='visualizations')
     print('='*50)

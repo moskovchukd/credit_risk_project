@@ -4,13 +4,12 @@ Skrypt do inspekcji struktury danych i modelu
 
 import pandas as pd
 from src.preprocessing import prepare_data_from_ucimlrepo
-from src.predict import load_best_model
+from src.predict import load_best_model, CreditRiskPredictor
 
 print("=" * 70)
 print("INSPEKCJA STRUKTURY DANYCH I MODELU")
 print("=" * 70)
 
-# Pobierz dane z UCI
 print("\n1. Pobieranie danych z UCI ML Repository...")
 X, y, preprocessor = prepare_data_from_ucimlrepo()
 
@@ -41,15 +40,14 @@ elif len(risk_counts) == 3:
     print("  Klasa 1 = Średnie ryzyko")
     print("  Klasa 2 = Wysokie ryzyko")
 
-# Wczytaj model
 print("\n7. Informacje o wytrenowanym modelu:")
-predictor = load_best_model('models')
+
+predictor = CreditRiskPredictor('models/LogisticRegression.pkl')
 
 print(f"\n8. Typ modelu: {type(predictor.model).__name__}")
 print(f"   Liczba klas w modelu: {len(predictor.model.classes_)}")
 print(f"   Klasy: {predictor.model.classes_}")
 
-# Spróbuj przewidzieć dla pierwszego wiersza
 print("\n9. Test przewidywania dla pierwszej próbki:")
 sample = X.iloc[0:1]
 prediction = predictor.predict(sample)
@@ -65,10 +63,9 @@ print("\n" + "=" * 70)
 print("UTWORZENIE SZABLONU PLIKU CSV DLA NOWYCH DANYCH")
 print("=" * 70)
 
-# Utwórz szablon CSV z przykładowymi danymi
 template = X.iloc[0:3].copy()
 template.to_csv('new_customers.csv', index=False)
-print("\n✓ Utworzono plik: template_new_customers.csv")
+print("\n✓ Utworzono plik: new_customers.csv")
 print("  Użyj tego pliku jako szablonu dla nowych danych.")
 print("  Wypełnij go danymi nowych klientów zachowując nazwy i kolejność kolumn.")
 
@@ -77,25 +74,22 @@ print("JAK UŻYWAĆ MODELU Z NOWYMI DANYMI")
 print("=" * 70)
 print("""
 1. Przygotuj plik CSV z danymi klientów:
-   - Użyj template_new_customers.csv jako wzór
+   - Użyj new_customers.csv jako wzór
    - Kolumny muszą mieć DOKŁADNIE takie same nazwy
    - Możesz usunąć przykładowe wiersze i dodać własne dane
 
 2. Wczytaj i przewiduj:
    
-   from predict import load_best_model
+   from predict import CreditRiskPredictor
    import pandas as pd
    
-   # Wczytaj model
-   predictor = load_best_model('models')
    
-   # Wczytaj dane nowych klientów
+   predictor = CreditRiskPredictor('models/LogisticRegression.pkl')
+   
    new_data = pd.read_csv('your_new_customers.csv')
    
-   # Wykonaj przewidywania
    results = predictor.predict_with_details(new_data)
    
-   # Zapisz wyniki
    results.to_csv('predictions.csv', index=False)
    
 3. Lub użyj przykładowego skryptu:

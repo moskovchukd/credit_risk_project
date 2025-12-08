@@ -4,7 +4,7 @@ Wczytuje dane z pliku CSV i wykonuje predykcje dla wszystkich klientów
 """
 
 import pandas as pd
-from src.predict import load_best_model
+from src.predict import load_best_model, CreditRiskPredictor
 import sys
 
 
@@ -56,18 +56,15 @@ def przetwarzaj_plik(plik_wejsciowy, plik_wyjsciowy=None):
     print("  ROZPOCZĘCIE PRZETWARZANIA WSADOWEGO")
     print("="*70)
 
-    # Domyślna nazwa pliku wyjściowego
     if plik_wyjsciowy is None:
         plik_wyjsciowy = plik_wejsciowy.replace('.csv', '_predictions.csv')
 
     try:
-        # Wczytaj dane
         print(f"\n📂 Wczytywanie danych z: {plik_wejsciowy}")
         dane = pd.read_csv(plik_wejsciowy)
         liczba_klientow = len(dane)
         print(f"✓ Wczytano {liczba_klientow} klientów")
 
-        # Sprawdź wymagane kolumny
         wymagane_kolumny = [f'Attribute{i}' for i in range(1, 21)]
         brakujace_kolumny = [col for col in wymagane_kolumny if col not in dane.columns]
 
@@ -80,27 +77,21 @@ def przetwarzaj_plik(plik_wejsciowy, plik_wyjsciowy=None):
 
         print("✓ Wszystkie wymagane kolumny są obecne")
 
-        # Wyświetl przykład danych
         print("\n📊 Przykładowy rekord (pierwsze 5 kolumn):")
         print(dane.iloc[0, :5].to_string())
 
-        # Wczytaj model
         print("\n🤖 Ładowanie modelu...")
-        predictor = load_best_model('models')
+        predictor = CreditRiskPredictor('models/LogisticRegression.pkl')
 
-        # Wykonaj predykcje
         print(f"\n⚙️  Wykonywanie predykcji dla {liczba_klientow} klientów...")
         wyniki = predictor.predict_with_details(dane)
 
-        # Dodaj numery klientów
         wyniki.insert(0, 'ID_Klienta', range(1, len(wyniki) + 1))
 
-        # Zapisz wyniki
         print(f"\n💾 Zapisywanie wyników do: {plik_wyjsciowy}")
         wyniki.to_csv(plik_wyjsciowy, index=False)
         print("✓ Wyniki zapisane pomyślnie")
 
-        # Podsumowanie
         print("\n" + "="*70)
         print("  PODSUMOWANIE WYNIKÓW")
         print("="*70)
@@ -184,11 +175,9 @@ def stworz_przykladowy_plik():
 def main():
     """Główna funkcja programu"""
 
-    # Sprawdź argumenty
     if len(sys.argv) < 2:
         wyswietl_instrukcje()
 
-        # Zapytaj czy stworzyć przykładowy plik (tylko w trybie interaktywnym)
         try:
             print("\nCzy chcesz stworzyć przykładowy plik do testowania?")
             odpowiedz = input("(tak/nie): ").strip().lower()
@@ -200,14 +189,11 @@ def main():
 
         return
 
-    # Pobierz argumenty
     plik_wejsciowy = sys.argv[1]
     plik_wyjsciowy = sys.argv[2] if len(sys.argv) > 2 else None
 
-    # Przetwórz plik
     sukces = przetwarzaj_plik(plik_wejsciowy, plik_wyjsciowy)
 
-    # Kod wyjścia
     sys.exit(0 if sukces else 1)
 
 

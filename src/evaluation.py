@@ -14,12 +14,25 @@ import os
 
 
 
-def plot_confusion_matrix(model, X_test_trans, y_test, labels=None, figsize=(6,6)):
-    cm = confusion_matrix(y_test, model.predict(X_test_trans), labels=labels)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+def plot_confusion_matrix(model, X_test_trans, y_test, labels=None, figsize=(8,8)):
+    """
+    Plot confusion matrix with optional custom labels
+    labels: list of string labels for display (e.g., ['Low Risk', 'Medium Risk', 'High Risk'])
+    """
+    y_pred = model.predict(X_test_trans)
+
+    # If labels are provided, they're for display only
+    # The confusion matrix still uses numeric values
+    if labels is not None:
+        cm = confusion_matrix(y_test, y_pred)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    else:
+        cm = confusion_matrix(y_test, y_pred)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+
     fig, ax = plt.subplots(figsize=figsize)
-    disp.plot(ax=ax, cmap='Blues')
-    plt.title('Macierz pomyłek (Confusion Matrix)')
+    disp.plot(ax=ax, cmap='Blues', values_format='d')
+    plt.title('Macierz pomyłek (Confusion Matrix)', fontsize=14, fontweight='bold')
     plt.tight_layout()
     return fig
 
@@ -50,7 +63,6 @@ def plot_roc_curves(results, X_test_trans, y_test):
     fig, ax = plt.subplots(figsize=(10, 8))
 
     if n_classes == 2:
-        # Binary classification
         for name, result in results.items():
             model = result['model']
             if hasattr(model, 'predict_proba'):
@@ -64,7 +76,6 @@ def plot_roc_curves(results, X_test_trans, y_test):
         ax.set_ylabel('True Positive Rate', fontsize=12)
         ax.set_title('ROC Curves - Binary Classification', fontsize=14)
     else:
-        # Multi-class classification - use One-vs-Rest approach
         y_test_bin = label_binarize(y_test, classes=np.unique(y_test))
 
         for name, result in results.items():
@@ -72,7 +83,6 @@ def plot_roc_curves(results, X_test_trans, y_test):
             if hasattr(model, 'predict_proba'):
                 y_proba = model.predict_proba(X_test_trans)
 
-                # Compute ROC curve and AUC for each class
                 fpr = dict()
                 tpr = dict()
                 roc_auc = dict()
@@ -81,7 +91,6 @@ def plot_roc_curves(results, X_test_trans, y_test):
                     fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_proba[:, i])
                     roc_auc[i] = auc(fpr[i], tpr[i])
 
-                # Compute micro-average ROC curve
                 fpr_micro, tpr_micro, _ = roc_curve(y_test_bin.ravel(), y_proba.ravel())
                 roc_auc_micro = auc(fpr_micro, tpr_micro)
 
@@ -108,7 +117,6 @@ def plot_precision_recall_curves(results, X_test_trans, y_test):
     fig, ax = plt.subplots(figsize=(10, 8))
 
     if n_classes == 2:
-        # Binary classification
         for name, result in results.items():
             model = result['model']
             if hasattr(model, 'predict_proba'):
@@ -120,7 +128,6 @@ def plot_precision_recall_curves(results, X_test_trans, y_test):
         ax.set_ylabel('Precision', fontsize=12)
         ax.set_title('Precision-Recall Curves - Binary Classification', fontsize=14)
     else:
-        # Multi-class
         y_test_bin = label_binarize(y_test, classes=np.unique(y_test))
 
         for name, result in results.items():
@@ -128,7 +135,6 @@ def plot_precision_recall_curves(results, X_test_trans, y_test):
             if hasattr(model, 'predict_proba'):
                 y_proba = model.predict_proba(X_test_trans)
 
-                # Compute micro-average precision-recall curve
                 precision_micro, recall_micro, _ = precision_recall_curve(
                     y_test_bin.ravel(), y_proba.ravel()
                 )
@@ -156,7 +162,6 @@ def plot_model_comparison(results):
     colors = plt.cm.viridis(np.linspace(0, 1, len(models)))
     bars = ax.bar(models, accuracies, color=colors, alpha=0.8, edgecolor='black')
 
-    # Add value labels on bars
     for bar in bars:
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height,
@@ -229,7 +234,6 @@ def plot_data_distribution(df, target_col='Risk', figsize=(15, 10)):
             axes[idx].set_ylabel('Frequency')
             axes[idx].grid(alpha=0.3)
 
-    # Hide unused subplots
     for idx in range(len(num_cols), len(axes)):
         axes[idx].axis('off')
 
@@ -249,7 +253,6 @@ def plot_target_distribution(y, figsize=(8, 6)):
 
     bars = ax.bar(unique, counts, color=colors, edgecolor='black', alpha=0.8)
 
-    # Add value labels
     for bar in bars:
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height,
@@ -303,7 +306,6 @@ def plot_missing_values(df, figsize=(10, 6)):
     ax.set_title('Missing Values per Feature', fontsize=14, fontweight='bold')
     ax.grid(axis='x', alpha=0.3)
 
-    # Add value labels
     for i, bar in enumerate(bars):
         width = bar.get_width()
         ax.text(width, bar.get_y() + bar.get_height()/2.,
@@ -322,36 +324,39 @@ def save_all_visualizations(results, X_test_trans, y_test, df, output_dir='visua
 
     print("Generowanie wizualizacji...")
 
-    # Model comparison
+    # Determine class labels based on unique values in y_test
+    n_classes = len(np.unique(y_test))
+    if n_classes == 2:
+        class_labels = ['Good', 'Bad']
+    elif n_classes == 3:
+        class_labels = ['Low Risk', 'Medium Risk', 'High Risk']
+    else:
+        class_labels = [f'Class {i}' for i in range(n_classes)]
+
     fig = plot_model_comparison(results)
     fig.savefig(os.path.join(output_dir, 'model_comparison.png'), dpi=300, bbox_inches='tight')
     plt.close(fig)
     print("  ✓ Model comparison saved")
 
-    # ROC curves
     fig = plot_roc_curves(results, X_test_trans, y_test)
     fig.savefig(os.path.join(output_dir, 'roc_curves.png'), dpi=300, bbox_inches='tight')
     plt.close(fig)
     print("  ✓ ROC curves saved")
 
-    # Precision-Recall curves
     fig = plot_precision_recall_curves(results, X_test_trans, y_test)
     fig.savefig(os.path.join(output_dir, 'precision_recall_curves.png'), dpi=300, bbox_inches='tight')
     plt.close(fig)
     print("  ✓ Precision-Recall curves saved")
 
-    # Confusion matrices for each model
     for name, result in results.items():
-        fig = plot_confusion_matrix(result['model'], X_test_trans, y_test)
+        fig = plot_confusion_matrix(result['model'], X_test_trans, y_test, labels=class_labels)
         fig.savefig(os.path.join(output_dir, f'confusion_matrix_{name}.png'), dpi=300, bbox_inches='tight')
         plt.close(fig)
     print("  ✓ Confusion matrices saved")
 
-    # Feature importances for tree-based models
     for name, result in results.items():
         model = result['model']
         if hasattr(model, 'feature_importances_'):
-            # Get feature names from the model
             if hasattr(model, 'feature_names_in_'):
                 feature_names = model.feature_names_in_
             else:
@@ -362,7 +367,6 @@ def save_all_visualizations(results, X_test_trans, y_test, df, output_dir='visua
             plt.close(fig)
     print("  ✓ Feature importances saved")
 
-    # Data quality visualizations
     fig = plot_target_distribution(df['Risk'])
     fig.savefig(os.path.join(output_dir, 'target_distribution.png'), dpi=300, bbox_inches='tight')
     plt.close(fig)

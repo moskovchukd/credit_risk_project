@@ -5,10 +5,9 @@ a system automatycznie konwertuje je do formatu wymaganego przez model
 """
 
 import pandas as pd
-from src.predict import load_best_model
+from src.predict import load_best_model, CreditRiskPredictor
 
 
-# Mapowania z polskich odpowiedzi na kody używane przez model
 ENCODINGS = {
     'Attribute1': {
         'pytanie': 'Status istniejącego konta czekowego:',
@@ -182,7 +181,7 @@ def pobierz_odpowiedz_kategoryczna(atrybut_nazwa):
             _, kod = config['opcje'][wybor]
             return kod
         else:
-            print("❌ Nieprawidłowy wybór. Spróbuj ponownie.")
+            print("Nieprawidłowy wybór. Spróbuj ponownie.")
 
 
 def pobierz_odpowiedz_numeryczna(atrybut_nazwa):
@@ -196,7 +195,7 @@ def pobierz_odpowiedz_numeryczna(atrybut_nazwa):
             wartosc = input("Wprowadź wartość: ").strip()
             return int(wartosc)
         except ValueError:
-            print("❌ Wprowadź prawidłową liczbę całkowitą.")
+            print("Wprowadź prawidłową liczbę całkowitą.")
 
 
 def przeprowadz_ankiete():
@@ -209,7 +208,6 @@ def przeprowadz_ankiete():
 
     dane_klienta = {}
 
-    # Przejdź przez wszystkie 20 atrybutów
     for i in range(1, 21):
         atrybut_nazwa = f'Attribute{i}'
         config = ENCODINGS[atrybut_nazwa]
@@ -236,7 +234,6 @@ def wyswietl_podsumowanie(dane):
             print(f"\n{pytanie}")
             print(f"  → {wartosc}")
         else:
-            # Znajdź opis dla kodu
             opis = None
             for key, (opis_txt, kod) in config['opcje'].items():
                 if kod == wartosc:
@@ -249,22 +246,19 @@ def wyswietl_podsumowanie(dane):
 def wykonaj_predykcje(dane_klienta):
     """Wykonuje predykcję ryzyka kredytowego na podstawie danych klienta"""
     try:
-        # Wczytaj najlepszy model
         print("\n" + "="*60)
         print("  ANALIZA RYZYKA KREDYTOWEGO")
         print("="*60)
         print("\nŁadowanie modelu...")
 
-        predictor = load_best_model('models')
+        
+        predictor = CreditRiskPredictor('models/LogisticRegression.pkl')
 
-        # Przygotuj dane w formacie DataFrame
         df = pd.DataFrame([dane_klienta])
 
-        # Wykonaj predykcję
         print("Wykonywanie predykcji...")
         prediction = predictor.predict(df)
 
-        # Pobierz prawdopodobieństwa jeśli model je wspiera
         if hasattr(predictor.model, 'predict_proba'):
             probabilities = predictor.predict_proba(df)
             n_classes = probabilities.shape[1]
@@ -272,19 +266,17 @@ def wykonaj_predykcje(dane_klienta):
             probabilities = None
             n_classes = 2
 
-        # Wyświetl wyniki
         print("\n" + "="*60)
         print("  WYNIK OCENY RYZYKA KREDYTOWEGO")
         print("="*60)
 
         if n_classes == 2:
-            # Model binarny: 0 = dobre, 1 = złe
             if prediction[0] == 0:
-                print("\n✅ WNIOSEK KREDYTOWY: ZATWIERDZONY")
+                print("\nWNIOSEK KREDYTOWY: ZATWIERDZONY")
                 print("   Ryzyko: NISKIE")
                 print("   Klient jest wiarygodny kredytowo.")
             else:
-                print("\n❌ WNIOSEK KREDYTOWY: ODRZUCONY")
+                print("\nWNIOSEK KREDYTOWY: ODRZUCONY")
                 print("   Ryzyko: WYSOKIE")
                 print("   Klient stanowi wysokie ryzyko kredytowe.")
 
@@ -295,7 +287,6 @@ def wykonaj_predykcje(dane_klienta):
                 print(f"\nPewność decyzji: {probabilities.max():.2%}")
 
         elif n_classes == 3:
-            # Model 3-klasowy: 0 = niskie, 1 = średnie, 2 = wysokie
             risk_labels = {0: 'NISKIE', 1: 'ŚREDNIE', 2: 'WYSOKIE'}
             risk_symbols = {0: '✅', 1: '⚠️', 2: '❌'}
             risk_decision = {
@@ -321,7 +312,7 @@ def wykonaj_predykcje(dane_klienta):
         return prediction[0], probabilities
 
     except Exception as e:
-        print(f"\n❌ Błąd podczas wykonywania predykcji: {e}")
+        print(f"\n Błąd podczas wykonywania predykcji: {e}")
         print("\nUpewnij się, że:")
         print("  1. Wytrenowałeś modele (uruchom: python run_train.py)")
         print("  2. Folder 'models/' zawiera wytrenowane modele")
@@ -337,18 +328,14 @@ def main():
     print("║" + " "*58 + "║")
     print("╚" + "="*58 + "╝")
 
-    # Przeprowadź ankietę
     dane_klienta = przeprowadz_ankiete()
 
-    # Wyświetl podsumowanie
     wyswietl_podsumowanie(dane_klienta)
 
-    # Zapytaj czy kontynuować
     print("\n" + "="*60)
     odpowiedz = input("\nCzy chcesz wykonać ocenę ryzyka kredytowego? (tak/nie): ").strip().lower()
 
     if odpowiedz in ['tak', 't', 'yes', 'y']:
-        # Wykonaj predykcję
         wykonaj_predykcje(dane_klienta)
     else:
         print("\nAnulowano ocenę ryzyka kredytowego.")
