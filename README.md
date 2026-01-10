@@ -1,6 +1,8 @@
 # Projekt: Ocena ryzyka kredytowego
 
-**🚀 Szybki start z ankietą:** Zobacz [QUICK_START.md](QUICK_START.md)
+**🌐 NOWA APLIKACJA WEBOWA!** Zobacz [WEBAPP_QUICKSTART.md](WEBAPP_QUICKSTART.md) - Nowoczesna aplikacja React z pięknym interfejsem!
+
+**🚀 Szybki start z ankietą (terminal):** Zobacz [QUICK_START.md](QUICK_START.md)
 
 ## Instrukcja:
 1. Stwórz środowisko (venv) i zainstaluj zależności: `pip install -r requirements.txt`
@@ -85,6 +87,40 @@ python batch_survey.py klienci.csv wyniki.csv
 
 ### Więcej informacji:
 Szczegółowa instrukcja dostępna w pliku [INSTRUKCJA_ANKIETY.md](INSTRUKCJA_ANKIETY.md)
+
+
+## 🌐 Aplikacja Webowa (NOWOŚĆ!)
+
+### Nowoczesny interfejs z React + Tailwind CSS
+
+Nowa aplikacja webowa oferuje profesjonalny, nowoczesny interfejs do oceny ryzyka kredytowego:
+
+**Funkcje:**
+- 🎨 Piękny, responsywny design z gradientami
+- 📊 Interaktywny formularz z nawigacją krok po kroku
+- 📈 Wizualizacja wyników z wykresami prawdopodobieństwa
+- ⚡ Natychmiastowa ocena ryzyka
+- 🔄 Automatyczne łączenie z modelem ML
+
+**Szybki start:**
+```bash
+# 1. Zainstaluj zależności (jednorazowo)
+pip install -r requirements.txt
+cd frontend && npm install && cd ..
+
+# 2. Uruchom aplikację
+./start_webapp.sh        # Mac/Linux
+start_webapp.bat         # Windows
+```
+
+**Dokumentacja:**
+- [WEBAPP_QUICKSTART.md](WEBAPP_QUICKSTART.md) - Szybki start
+- [WEB_APP_README.md](WEB_APP_README.md) - Pełna dokumentacja
+
+**Stack technologiczny:**
+- Frontend: React + TypeScript + Tailwind CSS
+- Backend: Flask API
+- ML Model: scikit-learn (Logistic Regression)
 
 
 ## Autorzy

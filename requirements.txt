@@ -8,3 +8,5 @@ imbalanced-learn
 joblib
 ucimlrepo
 openpyxl
+flask
+flask-cors
