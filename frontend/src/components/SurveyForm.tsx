@@ -28,14 +28,14 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
     const value = formData[currentQuestion.attribute as keyof SurveyData];
 
     if (value === undefined || value === '' || value === null) {
-      setErrors({ ...errors, [currentQuestion.attribute]: 'This field is required' });
+      setErrors({ ...errors, [currentQuestion.attribute]: 'To pole jest wymagane' });
       return false;
     }
 
     if (currentQuestion.type === 'number') {
       const numValue = Number(value);
-      if (isNaN(numValue) || numValue < 0) {
-        setErrors({ ...errors, [currentQuestion.attribute]: 'Please enter a valid positive number' });
+      if (isNaN(numValue)) {
+        setErrors({ ...errors, [currentQuestion.attribute]: 'Proszę wprowadzić prawidłową liczbę' });
         return false;
       }
     }
@@ -71,10 +71,10 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-gray-700">
-            Question {currentStep + 1} of {totalSteps}
+            Pytanie {currentStep + 1} z {totalSteps}
           </span>
           <span className="text-sm font-medium text-gray-700">
-            {Math.round(progress)}% Complete
+            {Math.round(progress)}% Ukończono
           </span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -121,14 +121,13 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
             <div className="mt-4">
               <input
                 type="number"
-                min="0"
-                value={formData[currentQuestion.attribute as keyof SurveyData] || ''}
-                onChange={(e) => handleInputChange(Number(e.target.value))}
+                value={formData[currentQuestion.attribute as keyof SurveyData] ?? ''}
+                onChange={(e) => handleInputChange(e.target.value === '' ? '' : Number(e.target.value))}
                 className="w-full px-6 py-4 text-lg border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition-all duration-200"
-                placeholder="Enter a number"
+                placeholder="Wprowadź liczbę"
               />
               {currentQuestion.unit && (
-                <p className="mt-2 text-sm text-gray-500">Unit: {currentQuestion.unit}</p>
+                <p className="mt-2 text-sm text-gray-500">Jednostka: {currentQuestion.unit}</p>
               )}
             </div>
           )}
@@ -158,7 +157,7 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300 hover:shadow-md'
             }`}
           >
-            ← Previous
+            ← Poprzednie
           </button>
 
           {currentStep < totalSteps - 1 ? (
@@ -166,7 +165,7 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
               onClick={handleNext}
               className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
             >
-              Next →
+              Następne →
             </button>
           ) : (
             <button
@@ -196,10 +195,10 @@ const SurveyForm = ({ onSubmit, loading }: SurveyFormProps) => {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  Analyzing...
+                  Analizowanie...
                 </span>
               ) : (
-                'Submit & Get Results'
+                'Prześlij i Uzyskaj Wyniki'
               )}
             </button>
           )}

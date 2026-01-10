@@ -102,13 +102,13 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
             {getRiskIcon(results.risk_level)}
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-            Assessment Complete
+            Ocena Ukończona
           </h2>
         </div>
 
         {/* Decision */}
         <div className="bg-white rounded-xl p-8 mb-6 shadow-lg">
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">Credit Decision:</h3>
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">Decyzja Kredytowa:</h3>
           <p className={`text-3xl font-bold ${getTextColor(results.risk_level)}`}>
             {results.decision}
           </p>
@@ -116,7 +116,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
 
         {/* Risk Level */}
         <div className="bg-white rounded-xl p-8 mb-6 shadow-lg">
-          <h3 className="text-2xl font-bold text-gray-800 mb-3">Risk Level:</h3>
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">Poziom Ryzyka:</h3>
           <p className={`text-3xl font-bold ${getTextColor(results.risk_level)}`}>
             {results.risk_level.toUpperCase()}
           </p>
@@ -124,7 +124,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
 
         {/* Confidence */}
         <div className="bg-white rounded-xl p-8 mb-6 shadow-lg">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">Decision Confidence:</h3>
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">Pewność Decyzji:</h3>
           <div className="mb-3">
             <div className="flex justify-between mb-2">
               <span className="text-lg font-semibold text-gray-700">
@@ -146,23 +146,23 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
           </div>
           <p className="text-sm text-gray-600 mt-2">
             {results.confidence >= 0.7
-              ? 'High confidence in this assessment'
+              ? 'Wysoka pewność tej oceny'
               : results.confidence >= 0.5
-              ? 'Moderate confidence in this assessment'
-              : 'Lower confidence - additional review may be needed'}
+              ? 'Umiarkowana pewność tej oceny'
+              : 'Niższa pewność - może być potrzebna dodatkowa weryfikacja'}
           </p>
         </div>
 
         {/* Probabilities */}
         {results.probabilities && results.probabilities.length > 0 && (
           <div className="bg-white rounded-xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">Risk Probabilities:</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">Prawdopodobieństwa Ryzyka:</h3>
             <div className="space-y-4">
               {results.probabilities.length === 2 ? (
                 <>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-700">Low Risk</span>
+                      <span className="font-semibold text-gray-700">Niskie Ryzyko</span>
                       <span className="font-bold text-green-600">
                         {(results.probabilities[0] * 100).toFixed(1)}%
                       </span>
@@ -176,7 +176,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-700">High Risk</span>
+                      <span className="font-semibold text-gray-700">Wysokie Ryzyko</span>
                       <span className="font-bold text-red-600">
                         {(results.probabilities[1] * 100).toFixed(1)}%
                       </span>
@@ -193,7 +193,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
                 <>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-700">Low Risk</span>
+                      <span className="font-semibold text-gray-700">Niskie Ryzyko</span>
                       <span className="font-bold text-green-600">
                         {(results.probabilities[0] * 100).toFixed(1)}%
                       </span>
@@ -207,7 +207,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-700">Medium Risk</span>
+                      <span className="font-semibold text-gray-700">Średnie Ryzyko</span>
                       <span className="font-bold text-yellow-600">
                         {(results.probabilities[1] * 100).toFixed(1)}%
                       </span>
@@ -221,7 +221,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
                   </div>
                   <div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-700">High Risk</span>
+                      <span className="font-semibold text-gray-700">Wysokie Ryzyko</span>
                       <span className="font-bold text-red-600">
                         {(results.probabilities[2] * 100).toFixed(1)}%
                       </span>
@@ -245,7 +245,7 @@ const ResultsDisplay = ({ results, onReset }: ResultsDisplayProps) => {
             onClick={onReset}
             className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl font-semibold text-lg hover:shadow-lg hover:scale-105 transition-all duration-200"
           >
-            Start New Assessment
+            Rozpocznij Nową Ocenę
           </button>
         </div>
       </div>

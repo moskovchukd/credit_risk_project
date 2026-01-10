@@ -101,21 +101,21 @@ def predict():
         if n_classes == 2:
             # Binary classification
             if prediction == 0:
-                risk_level = "Low"
-                decision = "APPROVED - Client is creditworthy"
+                risk_level = "Niskie"
+                decision = "ZATWIERDZONY - Klient jest wiarygodny kredytowo"
             else:
-                risk_level = "High"
-                decision = "REJECTED - Client poses high credit risk"
+                risk_level = "Wysokie"
+                decision = "ODRZUCONY - Klient stanowi wysokie ryzyko kredytowe"
         else:
             # Multi-class classification
-            risk_labels = {0: 'Low', 1: 'Medium', 2: 'High'}
+            risk_labels = {0: 'Niskie', 1: 'Średnie', 2: 'Wysokie'}
             risk_decisions = {
-                0: 'APPROVED - Client is creditworthy',
-                1: 'REQUIRES ADDITIONAL VERIFICATION - Client needs further analysis',
-                2: 'REJECTED - Client poses high credit risk'
+                0: 'ZATWIERDZONY - Klient jest wiarygodny kredytowo',
+                1: 'WYMAGA DODATKOWEJ WERYFIKACJI - Klient wymaga dodatkowej analizy',
+                2: 'ODRZUCONY - Klient stanowi wysokie ryzyko kredytowe'
             }
-            risk_level = risk_labels.get(prediction, 'Unknown')
-            decision = risk_decisions.get(prediction, 'Unknown')
+            risk_level = risk_labels.get(prediction, 'Nieznane')
+            decision = risk_decisions.get(prediction, 'Nieznane')
 
         # Calculate confidence (max probability)
         confidence = max(probabilities) if probabilities else 0.0

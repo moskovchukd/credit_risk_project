@@ -28,7 +28,7 @@ function App() {
       setShowResults(true);
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while processing your request. Please try again.');
+      alert('Wystąpił błąd podczas przetwarzania Twojego wniosku. Spróbuj ponownie.');
     } finally {
       setLoading(false);
     }
@@ -44,10 +44,10 @@ function App() {
       <div className="container mx-auto px-4 py-8">
         <header className="text-center mb-12">
           <h1 className="text-5xl font-bold text-gray-800 mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-            Credit Risk Assessment
+            Ocena Ryzyka Kredytowego
           </h1>
           <p className="text-xl text-gray-600">
-            Complete the survey to evaluate your creditworthiness
+            Wypełnij ankietę, aby ocenić swoją zdolność kredytową
           </p>
         </header>
 
