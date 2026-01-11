@@ -7,9 +7,9 @@
 ## Instrukcja:
 1. Stwórz środowisko (venv) i zainstaluj zależności: `pip install -r requirements.txt`
 2. Uruchom trening: `python run_train.py`
-   - Trenuje wszystkie modele (LogisticRegression, RandomForest, XGBoost, SVM, KNN)
+   - Trenuje model Logistic Regression
    - Automatycznie generuje wszystkie wizualizacje
-   - Zapisuje modele w folderze `models/`
+   - Zapisuje model w `models/LogisticRegression.pkl`
    - Zapisuje wizualizacje w folderze `visualizations/`
 3. **NOWOŚĆ: Interaktywna ankieta:** `python interactive_survey.py`
    - Przeprowadza ankietę w języku polskim
@@ -26,11 +26,10 @@
 Po uruchomieniu `python run_train.py`, w folderze `visualizations/` znajdziesz:
 
 ### Model Performance:
-- `model_comparison.png` - Porównanie dokładności wszystkich modeli
-- `roc_curves.png` - Krzywe ROC dla wszystkich modeli
+- `model_comparison.png` - Dokładność modelu
+- `roc_curves.png` - Krzywe ROC
 - `precision_recall_curves.png` - Krzywe Precision-Recall
-- `confusion_matrix_[MODEL].png` - Macierze pomyłek dla każdego modelu
-- `feature_importance_[MODEL].png` - Ważność cech dla modeli drzewiastych
+- `confusion_matrix_LogisticRegression.png` - Macierz pomyłek
 
 ### Data Quality:
 - `target_distribution.png` - Rozkład zmiennej docelowej (Risk)

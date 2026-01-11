@@ -1,26 +1,45 @@
+"""
+Train Logistic Regression model for credit risk assessment.
+This script trains a single optimized model and generates visualizations.
+"""
 from src.preprocessing import prepare_data_from_ucimlrepo
-from src.model_training import train_and_compare
+from src.model_training import train_logistic_regression
 from src.evaluation import save_all_visualizations
 import pandas as pd
 
 
-
-
-
 def main():
-    X, y, preprocessor = prepare_data_from_ucimlrepo()
+    print("\n" + "="*60)
+    print("  TRENING MODELU OCENY RYZYKA KREDYTOWEGO")
+    print("  Model: Logistic Regression")
+    print("="*60 + "\n")
 
+    # Prepare data
+    print("Przygotowanie danych...")
+    X, y, preprocessor = prepare_data_from_ucimlrepo()
     df = pd.concat([X, y], axis=1)
 
-    results, X_test_trans, y_test = train_and_compare(X, y, preprocessor, output_dir='models')
+    # Train model
+    print("\n" + "-"*60)
+    results, X_test_trans, y_test = train_logistic_regression(
+        X, y, preprocessor, output_dir='models'
+    )
+    print("-"*60)
 
-    print('\nTrening zakończony. Wyniki:')
-    for k,v in results.items():
-        print(f'{k}: {v["accuracy"]:.4f}')
+    # Display results
+    print('\n✓ Trening zakończony pomyślnie!')
+    for model_name, model_info in results.items():
+        print(f'   {model_name}: {model_info["accuracy"]:.4f}')
 
-    print('\n' + '='*50)
+    # Generate visualizations
+    print('\n' + '='*60)
+    print("Generowanie wizualizacji...")
     save_all_visualizations(results, X_test_trans, y_test, df, output_dir='visualizations')
-    print('='*50)
+    print('='*60)
+
+    print("\n✓ Wszystko gotowe!")
+    print("  Model: models/LogisticRegression.pkl")
+    print("  Wizualizacje: visualizations/\n")
 
 
 if __name__ == '__main__':
